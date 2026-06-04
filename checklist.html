@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Чек-лист решений кафедры естественных наук | МЭШ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', 'Roboto', 'Noto Sans', system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+            padding: 2rem 1rem;
+            color: #1e2a3a;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        /* официальный стиль */
+        .header {
+            background: #0b2b3d;
+            color: white;
+            padding: 2rem 2rem 1.5rem 2rem;
+            border-bottom: 4px solid #c7a23b;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            margin-bottom: 0.5rem;
+        }
+
+        .header h1 span {
+            font-weight: 400;
+            font-size: 1rem;
+            color: #d4dee4;
+        }
+
+        .header .sub {
+            font-size: 0.95rem;
+            opacity: 0.85;
+            margin-top: 0.5rem;
+            border-left: 3px solid #c7a23b;
+            padding-left: 1rem;
+        }
+
+        .header a {
+            color: #ffd966;
+            text-decoration: none;
+            border-bottom: 1px dotted;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .info-note {
+            background: #eef2fa;
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            border-left: 4px solid #2c6e9e;
+            color: #1e4663;
+        }
+
+        .criteria-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .criteria-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 1rem 1.2rem;
+            transition: all 0.1s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .criteria-item:hover {
+            background-color: #fafcff;
+            border-color: #bdd3eb;
+        }
+
+        .question-text {
+            font-weight: 500;
+            color: #0b2b3d;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            line-height: 1.4;
+            padding-right: 0.5rem;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .radio-group label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #2c3e4e;
+        }
+
+        .radio-group input {
+            width: 1.1rem;
+            height: 1.1rem;
+            cursor: pointer;
+            accent-color: #2c6e9e;
+        }
+
+        hr {
+            margin: 1.5rem 0;
+            border: none;
+            border-top: 1px solid #e2edf7;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2rem 0 1.5rem;
+        }
+
+        button {
+            background: #0b2b3d;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        button.reset-btn {
+            background: #5b6f82;
+        }
+
+        button:hover {
+            background: #1e4a62;
+            transform: translateY(-1px);
+        }
+
+        button.reset-btn:hover {
+            background: #3e5568;
+        }
+
+        .result-card {
+            background: #f8f9fc;
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: center;
+            border: 1px solid #e0e9f2;
+            transition: 0.2s;
+        }
+
+        .result-positive {
+            background: #e4f4e6;
+            border-left: 8px solid #2b7a3e;
+            color: #145c2e;
+        }
+
+        .result-negative {
+            background: #feeceb;
+            border-left: 8px solid #b33c2e;
+            color: #871e0e;
+        }
+
+        .result-percent {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+
+        .verdict {
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+
+        .verdict-desc {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            background: #f1f5f9;
+            padding: 1rem 2rem;
+            font-size: 0.75rem;
+            text-align: center;
+            color: #4a627a;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .required-warning {
+            color: #c0392b;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        @media (max-width: 650px) {
+            .content {
+                padding: 1.2rem;
+            }
+            .question-text {
+                font-size: 0.92rem;
+            }
+            .radio-group {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Чек-лист крупного решения <span>кафедра естественных наук</span></h1>
+        <div class="sub">
+            Оценка в соответствии с <strong>миссией, философией и стратегией</strong> 
+            <a href="https://mes.ru/rus/about/mission/" target="_blank" rel="noopener noreferrer">Московской экономической школы</a><br>
+            «Школа, где учатся быть теми, кто делает мир лучше»
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="info-note">
+            ⚖️ <strong>Порядок применения:</strong> для каждого утверждения выберите «Да» или «Нет».<br>
+            📌 Решение считается <strong>положительным</strong>, если доля ответов «Да» превышает <strong>80%</strong> от общего числа критериев.<br>
+            🧪 Документ разработан для закупок, введения новых курсов, изменения программ и иных значимых инициатив кафедры.
+        </div>
+
+        <form id="checklistForm">
+            <div class="criteria-list" id="criteriaContainer">
+                <!-- все пункты будут динамически сгенерированы из массива для удобства поддержки -->
+            </div>
+            <div class="action-buttons">
+                <button type="button" id="calcBtn">Рассчитать решение</button>
+                <button type="button" id="resetBtn" class="reset-btn">Сбросить все ответы</button>
+            </div>
+            <div id="warningMsg" class="required-warning">⚠️ Пожалуйста, ответьте на все вопросы (Да / Нет).</div>
+        </form>
+
+        <div id="resultBlock" class="result-card" style="display: none;">
+            <!-- результат появится после расчёта -->
+        </div>
+    </div>
+    <div class="footer">
+        © Кафедра естественных наук · Чек-лист утверждён на заседании ШМО · Соответствует ФГОС и стратегии МЭШ
+    </div>
+</div>
+
+<script>
+    // Массив критериев (официальные формулировки, включая ФГОС)
+    const criteriaList = [
+        "Решение направлено на формирование у обучающихся навыков познания, анализа и принятия решений в нестандартных ситуациях.",
+        "Решение предполагает использование преадаптивных гибких моделей, готовящих универсальных учеников.",
+        "Решение направлено на помощь обучающемуся в конструировании смысловой картины мира.",
+        "Решение способствует повышению качества образования как сочетания эффективного процесса и конкурентоспособного результата.",
+        "Решение предполагает использование современных ресурсов, лучших национальных и мировых образовательных практик.",
+        "Решение обеспечивает дифференцированный подход к выстраиванию индивидуальной образовательной траектории обучающегося.",
+        "Решение направлено на наиболее полную реализацию академического и творческого потенциала обучающегося.",
+        "Решение способствует приобретению обучающимися знаний, навыков и диспозиций, необходимых в условиях современного мира.",
+        "Решение предполагает формирование у обучающихся навыков ответственного и эффективного использования цифровых ресурсов, интернет-технологий и сервисов.",
+        "Определён и закреплён приказом (или иным распорядительным документом) ответственный(-ые) за реализацию решения из числа сотрудников кафедры.",
+        "Проведён анализ ресурсного обеспечения (финансового, материально-технического, кадрового, временного), необходимого для реализации решения.",
+        "Разработан план мероприятий по реализации решения с указанием контрольных точек и сроков отчётности.",
+        "Решение соответствует требованиям федеральных государственных образовательных стандартов (ФГОС) и обеспечивает достижение планируемых результатов освоения образовательных программ.",
+        "Решение учитывает принципы преемственности ФГОС и направлено на формирование функциональной грамотности обучающихся (естественно-научной, читательской, математической)."
+    ];
+
+    // функция для создания DOM-элементов вопросов
+    function buildForm() {
+        const container = document.getElementById('criteriaContainer');
+        container.innerHTML = '';
+        criteriaList.forEach((text, idx) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'criteria-item';
+            
+            const questionP = document.createElement('div');
+            questionP.className = 'question-text';
+            questionP.innerText = `${idx+1}. ${text}`;
+            
+            const radioGroup = document.createElement('div');
+            radioGroup.className = 'radio-group';
+            
+            // radio Да
+            const labelYes = document.createElement('label');
+            const radioYes = document.createElement('input');
+            radioYes.type = 'radio';
+            radioYes.name = `q${idx}`;
+            radioYes.value = 'yes';
+            radioYes.setAttribute('data-idx', idx);
+            labelYes.appendChild(radioYes);
+            labelYes.appendChild(document.createTextNode(' Да'));
+            
+            // radio Нет
+            const labelNo = document.createElement('label');
+            const radioNo = document.createElement('input');
+            radioNo.type = 'radio';
+            radioNo.name = `q${idx}`;
+            radioNo.value = 'no';
+            radioNo.setAttribute('data-idx', idx);
+            labelNo.appendChild(radioNo);
+            labelNo.appendChild(document.createTextNode(' Нет'));
+            
+            radioGroup.appendChild(labelYes);
+            radioGroup.appendChild(labelNo);
+            
+            itemDiv.appendChild(questionP);
+            itemDiv.appendChild(radioGroup);
+            container.appendChild(itemDiv);
+        });
+    }
+
+    // получить массив ответов (null если не выбран)
+    function getAnswers() {
+        const total = criteriaList.length;
+        const answers = new Array(total).fill(null);
+        for (let i = 0; i < total; i++) {
+            const radios = document.getElementsByName(`q${i}`);
+            for (let j = 0; j < radios.length; j++) {
+                if (radios[j].checked) {
+                    answers[i] = radios[j].value === 'yes' ? true : false;
+                    break;
+                }
+            }
+        }
+        return answers;
+    }
+
+    // проверка, что все вопросы заполнены
+    function allQuestionsAnswered(answers) {
+        return answers.every(a => a !== null);
+    }
+
+    // подсчет процента "Да"
+    function calculatePercent(answers) {
+        const yesCount = answers.filter(a => a === true).length;
+        return (yesCount / answers.length) * 100;
+    }
+
+    // отобразить результат
+    function showResult(percent, isAccepted) {
+        const resultDiv = document.getElementById('resultBlock');
+        resultDiv.style.display = 'block';
+        
+        const yesCount = Math.round((percent / 100) * criteriaList.length);
+        const total = criteriaList.length;
+        
+        let verdictHtml = '';
+        let resultClass = '';
+        if (isAccepted) {
+            resultClass = 'result-positive';
+            verdictHtml = `
+                <div class="verdict">✅ РЕШЕНИЕ ПРИНИМАЕТСЯ</div>
+                <div class="verdict-desc">Инициатива соответствует стратегическим приоритетам МЭШ, философии образования, критериям качества и ФГОС.</div>
+            `;
+        } else {
+            resultClass = 'result-negative';
+            verdictHtml = `
+                <div class="verdict">❌ РЕШЕНИЕ НЕ ПРИНИМАЕТСЯ</div>
+                <div class="verdict-desc">Доля соответствия (${percent.toFixed(1)}%) ниже установленного порога 80%. Требуется доработка или отклонение.</div>
+            `;
+        }
+        
+        resultDiv.className = `result-card ${resultClass}`;
+        resultDiv.innerHTML = `
+            <div class="result-percent">${percent.toFixed(1)}% соответствия</div>
+            <div>Положительных ответов: ${yesCount} из ${total}</div>
+            ${verdictHtml}
+            <hr style="margin: 0.8rem 0; opacity:0.3;">
+            <div style="font-size:0.85rem; margin-top:0.5rem;">Основание: чек-лист кафедры естественных наук, версия 1.0 (МЭШ).</div>
+        `;
+    }
+
+    // главный расчет
+    function evaluateDecision() {
+        const answers = getAnswers();
+        if (!allQuestionsAnswered(answers)) {
+            const warning = document.getElementById('warningMsg');
+            warning.style.display = 'block';
+            // скрываем предыдущий результат
+            document.getElementById('resultBlock').style.display = 'none';
+            return;
+        }
+        document.getElementById('warningMsg').style.display = 'none';
+        
+        const percent = calculatePercent(answers);
+        const threshold = 80;
+        const isAccepted = percent > threshold;  // строго более 80%
+        showResult(percent, isAccepted);
+    }
+    
+    // сброс всех радио-кнопок
+    function resetAll() {
+        const total = criteriaList.length;
+        for (let i = 0; i < total; i++) {
+            const radios = document.getElementsByName(`q${i}`);
+            radios.forEach(radio => radio.checked = false);
+        }
+        document.getElementById('resultBlock').style.display = 'none';
+        const warning = document.getElementById('warningMsg');
+        warning.style.display = 'none';
+    }
+    
+    // инициализация формы и событий
+    function init() {
+        buildForm();
+        const calcBtn = document.getElementById('calcBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        calcBtn.addEventListener('click', evaluateDecision);
+        resetBtn.addEventListener('click', resetAll);
+    }
+    
+    init();
+</script>
+</body>
+</html>
